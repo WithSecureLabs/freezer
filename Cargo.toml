@@ -1,0 +1,17 @@
+[package]
+name = "freezer"
+version = "1.0.0"
+edition = "2021"
+license = "Apache-2.0"
+description = "A tool to download resources from a Kubernetes cluster to then be ingested by IceKube"
+readme = "README.md"
+repository = "https://github.com/WithSecureLabs/freezer"
+
+[dependencies]
+kube = { version = "0.87.2", features = ["runtime", "derive"] }
+k8s-openapi = { version = "0.20.0", features = ["latest"] }
+tokio = { version = "1.35.1", features = ["full"] }
+anyhow = "1.0.76"
+serde = { version = "1.0.193", features = ["derive"] }
+http = "0.2.11"
+clap = { version = "4.4.11", features = ["derive"] }
