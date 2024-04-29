@@ -63,11 +63,14 @@ async fn get_version(client: &Client) -> anyhow::Result<String> {
 }
 
 async fn get_context_name() -> anyhow::Result<String> {
-    let kubeconfig = Kubeconfig::read()?;
+    let kubeconfig = Kubeconfig::read();
 
-    Ok(kubeconfig
-        .current_context
-        .ok_or_else(|| anyhow::anyhow!("failed to get current context"))?)
+    match kubeconfig {
+        Ok(k) => Ok(k
+            .current_context
+            .ok_or_else(|| anyhow::anyhow!("failed to get current context"))?),
+        Err(_e) => Ok("in-cluster".to_string()),
+    }
 }
 
 async fn get_namespaces(client: &Client, discovery: &Discovery) -> anyhow::Result<Vec<String>> {
