@@ -256,7 +256,13 @@ async fn main() -> anyhow::Result<()> {
 
             let mut items = Vec::new();
             for api in apis {
-                items.extend(api.list(&Default::default()).await?.items);
+                match api.list(&Default::default()).await {
+                    Ok(x) => items.extend(x.items),
+                    Err(_) => {
+                        println!("\tFailed to list items in {}", api.resource_url(),);
+                        continue;
+                    }
+                }
             }
 
             if items.is_empty() {
