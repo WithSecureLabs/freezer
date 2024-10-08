@@ -212,6 +212,39 @@ async fn api_resources(discovery: &Discovery) -> Vec<MyApiResource> {
     resources
 }
 
+fn clean_last_applied_configuration(
+    map: &mut serde_json::Map<String, serde_json::Value>,
+) -> serde_json::Result<()> {
+    if let Some(annotations) = map
+        .get_mut("metadata")
+        .and_then(|m| m.get_mut("annotations"))
+    {
+        if let Some(last_applied) =
+            annotations.get_mut("kubectl.kubernetes.io/last-applied-configuration")
+        {
+            let last_applied = last_applied.as_str().unwrap();
+            let last_applied_json = match serde_json::from_str(last_applied) {
+                Ok(serde_json::Value::Object(mut inp)) => {
+                    inp.remove("data");
+                    serde_json::Value::Object(inp)
+                }
+                _ => unreachable!(),
+            };
+            let modified_last_applied = serde_json::to_string(&last_applied_json)?;
+            match annotations {
+                serde_json::Value::Object(ref mut map) => {
+                    map.insert(
+                        "kubectl.kubernetes.io/last-applied-configuration".to_string(),
+                        serde_json::Value::String(modified_last_applied),
+                    );
+                }
+                _ => unreachable!(),
+            }
+        }
+    }
+    Ok(())
+}
+
 #[derive(Parser, Default, Debug)]
 struct Args {
     output_dir: String,
@@ -284,6 +317,7 @@ async fn main() -> anyhow::Result<()> {
                         );
                         if ar.plural == "secrets" {
                             map.remove("data");
+                            let _ = clean_last_applied_configuration(&mut map);
                         }
                         map
                     }
