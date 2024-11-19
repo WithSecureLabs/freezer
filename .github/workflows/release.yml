@@ -130,9 +130,5 @@ jobs:
 
       - uses: actions/upload-artifact@v4.4.3
         with:
-          name:
-            - tmp/freezer-dev-x86_64-windows
-            - tmp/freezer-dev-aarch64-linux
-            - tmp/freezer-dev-x86_64-linux
-            - tmp/freezer-dev-x86_64-macos
-          path: dist
+          name: dist
+          path: tmp/*
