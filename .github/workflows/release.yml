@@ -6,7 +6,7 @@ on:
     branches:
       - testing
     # tags:
-    #   - "[0-9]+.[0-9]+.[0-9]+"
+    #   - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
   BIN_NAME: freezer
@@ -131,4 +131,4 @@ jobs:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -ex
-          echo gh release create ${{ steps.tagname.outputs.val }} dist/* --title ${{ steps.tagname.outputs.val }} --notes "Release ${{ steps.tagname.outputs.val }}"
+          gh release create ${{ steps.tagname.outputs.val }} dist/* --title ${{ steps.tagname.outputs.val }} --notes "Release ${{ steps.tagname.outputs.val }}"
