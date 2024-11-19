@@ -126,9 +126,9 @@ jobs:
               fi
           done
 
-      - run: ls -al tmp/
-
-      - uses: actions/upload-artifact@v4.4.3
-        with:
-          name: dist
-          path: tmp/*
+      - name: Release
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -ex
+          echo gh release create ${{ steps.tagname.outputs.val }} dist/* --title ${{ steps.tagname.outputs.val }} --notes "Release ${{ steps.tagname.outputs.val }}"
