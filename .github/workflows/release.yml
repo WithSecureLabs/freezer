@@ -3,10 +3,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - testing
-    # tags:
-    #   - "v[0-9]+.[0-9]+.[0-9]+"
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
   BIN_NAME: freezer
